@@ -8,6 +8,12 @@ Targets **CMU150 NA 70.00.100A**.
 python patch.py <path-to-extracted-rootfs>
 ```
 
+Example:
+
+```bash
+python patch.py C:\path\to\cmu150_NA_70.00.100A_reinstall\rootfs1upd\e0000000001.dat\e0000000001\e0000000001~
+```
+
 Optional `-o / --output` overrides the output directory (defaults to `./output` inside this folder).
 
 ## What It Patches
@@ -30,9 +36,17 @@ Optional `-o / --output` overrides the output directory (defaults to `./output` 
 
 ## Deployment
 
-Remount `/` read-write on the CMU, back up the original files (e.g. `*.bak`), copy the contents of `output/` into place (using atomic `mv` for `.so`/binary files), `sync`, and reboot:
+1. Remount `/` read-write on the CMU:
+   ```sh
+   mount -o remount,rw /
+   ```
+2. Back up the original files (`*.bak`), copy the contents of `output/` into place (using atomic `mv` for `.so`/binary files), `sync`, and reboot:
 
-- `output/etc/aap_system_attributes.xml` → `/etc/aap_system_attributes.xml`
-- `output/usr/bin/aap_service` → `/usr/bin/aap_service`
-- `output/jci/aapa/blmjciaapa.so` → `/jci/aapa/blmjciaapa.so`
-- `output/jci/vbs/modules/libjcimod_bcm.so` → `/jci/vbs/modules/libjcimod_bcm.so`
+   - `output/etc/aap_system_attributes.xml` → `/etc/aap_system_attributes.xml`
+   - `output/usr/bin/aap_service` → `/usr/bin/aap_service`
+   - `output/jci/aapa/blmjciaapa.so` → `/jci/aapa/blmjciaapa.so`
+   - `output/jci/vbs/modules/libjcimod_bcm.so` → `/jci/vbs/modules/libjcimod_bcm.so`
+
+   ```sh
+   sync && reboot
+   ```
